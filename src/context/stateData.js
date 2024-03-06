@@ -26,6 +26,8 @@ export default function DataProvider({ children }) {
         circl4: false,
     })
     
+    const selectPlainRef = useRef("")
+    const selectPlainPriceRef = useRef("monthly")
 
     const [selectScope, setSelectScope] = useState(1)
 
@@ -136,7 +138,10 @@ export default function DataProvider({ children }) {
         formData: formData,
         setFormData: setFormData,
 
-        circleFlagRef:circleFlagRef
+        circleFlagRef:circleFlagRef,
+
+        selectPlainRef:selectPlainRef,
+        selectPlainPriceRef:selectPlainPriceRef,
 
     }
 

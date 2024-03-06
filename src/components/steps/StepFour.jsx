@@ -119,7 +119,7 @@ const StepFour = () => {
       },
     },
   };
- 
+
   return (
     <>
       <div className="finish-up-block" id="finish-up-id">
@@ -153,26 +153,45 @@ const StepFour = () => {
                 <div className="finish-add-on-wrapper" id="add-on-wrapper-id">
                   {/* {addOnSelectedItem.map((data, index) => { */}
                   {Object.keys(services.addons).map((addon, idx) => {
-                    if (dataContext.formData[addon] === true) {
-                      return (
-                        <DisplaySummary
-                          key={idx}
-                          obj={{
-                            title: services.addons[addon].title,
-                            price:
-                              dataContext.selectPlainDuration === "monthly"
-                                ? formatString(
-                                    "month",
-                                    services.addons[addon].money
-                                  )
-                                : formatString(
-                                    "year",
-                                    services.addons[addon].money
-                                  ),
-                          }}
-                        />
-                      );
-                    }
+                    // if (dataContext.formData[addon] === true) {
+                    //   return (
+                    //     <DisplaySummary
+                    //       key={idx}
+                    //       obj={{
+                    //         title: services.addons[addon].title,
+                    //         price:
+                    //           dataContext.selectPlainDuration === "monthly"
+                    //             ? formatString(
+                    //                 "month",
+                    //                 services.addons[addon].money
+                    //               )
+                    //             : formatString(
+                    //                 "year",
+                    //                 services.addons[addon].money
+                    //               ),
+                    //       }}
+                    //     />
+                    //   );
+                    // }
+                    return (
+                    dataContext.formData[addon] === true && (
+                      <DisplaySummary
+                        key={idx}
+                        obj={{
+                          title: services.addons[addon].title,
+                          price:
+                            dataContext.selectPlainDuration === "monthly"
+                              ? formatString(
+                                  "month",
+                                  services.addons[addon].money
+                                )
+                              : formatString(
+                                  "year",
+                                  services.addons[addon].money
+                                ),
+                        }}
+                      />
+                    ));
                   })}
                 </div>
               </div>

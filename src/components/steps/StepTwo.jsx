@@ -1,32 +1,37 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import archadeImage from "../../assets/images/icon-arcade.svg";
 import advanceImage from "../../assets/images/icon-advanced.svg";
 import proImage from "../../assets/images/icon-pro.svg";
 import { formatString } from "../../commonUtil/CommonUtil";
 import { DataContext } from "../../context/stateData";
 
+let MONTHLY_PRICE = {
+  archad_plan: 9,
+  advance_plan: 12,
+  pro_plan: 15,
+  online_service: 1,
+  large_service: 2,
+  custom_service: 2,
+};
+let YEARLY_PRICE = {
+  archad_plan: 90,
+  advance_plan: 120,
+  pro_plan: 150,
+  online_service: 10,
+  large_service: 20,
+  custom_service: 20,
+};
 const StepTwo = () => {
-
   const dataContext = useContext(DataContext);
 
   const [plainErrorFlag, setPlainErrorFlag] = useState(false);
 
-  let MONTHLY_PRICE = {
-    archad_plan: 9,
-    advance_plan: 12,
-    pro_plan: 15,
-    online_service: 1,
-    large_service: 2,
-    custom_service: 2,
-  };
-  let YEARLY_PRICE = {
-    archad_plan: 90,
-    advance_plan: 120,
-    pro_plan: 150,
-    online_service: 10,
-    large_service: 20,
-    custom_service: 20,
-  };
+  const [selectPlain, setSelectPlain] = useState("");
+  const [selectPlainDuration, setSelectPlainDuration] = useState("monthly");
+  const [selectPlainUI, setSelectPlainUI] = useState(null);
+  const [selectedPlainPrice, setSelectedPlainPrice] = useState(0);
+
+  // const selectPlainRef = useRef("")
 
   const handleSelectCard = (target) => {
     setPlainErrorFlag(false);
@@ -39,61 +44,68 @@ const StepTwo = () => {
 
     switch (target) {
       case 1:
-
-        console.log("------------------------------");
-        dataContext.setSelectPlainUI(0);
-        dataContext.setSelectPlain("Arcade");
-        dataContext.setSelectedPlainPrice(
-            dataContext.selectPlainDuration === "monthly"
+        setSelectPlainUI(0);
+        setSelectPlain("Arcade");
+        dataContext.selectPlainRef.current = "Arcade";
+        setSelectedPlainPrice(
+          selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.archad_plan
             : YEARLY_PRICE.archad_plan
         );
         break;
 
       case 2:
-        console.log("------------------------------");
-        dataContext.setSelectPlainUI(1);
-        dataContext.setSelectPlain("Advance");
-        dataContext.setSelectedPlainPrice(
-            dataContext.selectPlainDuration === "monthly"
+        setSelectPlainUI(1);
+        setSelectPlain("Advance");
+        dataContext.selectPlainRef.current = "Advance";
+        setSelectedPlainPrice(
+          selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.advance_plan
             : YEARLY_PRICE.advance_plan
         );
         break;
 
       case 3:
-        console.log("------------------------------");
-        dataContext.setSelectPlainUI(2);
-        dataContext.setSelectPlain("Pro");
-        dataContext.setSelectedPlainPrice(
-            dataContext.selectPlainDuration === "monthly"
+        setSelectPlainUI(2);
+        setSelectPlain("Pro");
+        dataContext.selectPlainRef.current = "Pro";
+        setSelectedPlainPrice(
+          selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.pro_plan
             : YEARLY_PRICE.pro_plan
         );
         break;
 
       default:
-        dataContext.setSelectPlainUI(0);
-        dataContext.setSelectPlain("Arcade");
+        setSelectPlainUI(0);
+        setSelectPlain("Arcade");
+        dataContext.selectPlainRef("Arcade");
         break;
     }
   };
 
   const handleChangePlainDuration = (e) => {
     if (e.target.checked === true) {
-      dataContext.setSelectPlainDuration("yearly");
+      dataContext.selectPlainPriceRef.current = "yearly"
+      setSelectPlainDuration("yearly");
     } else {
-      dataContext.setSelectPlainDuration("monthly");
+      dataContext.selectPlainPriceRef.current = "monthly"
+      setSelectPlainDuration("monthly");
+
     }
   };
 
   const increment = () => {
-    dataContext.handleIncrementStepChange()
+    dataContext.setSelectPlain(selectPlain);
+    dataContext.setSelectPlainDuration(selectPlainDuration);
+    dataContext.setSelectedPlainPrice(selectedPlainPrice);
+    // dataContext.setSelectPlainUI(selectPlainUI);
+    dataContext.handleIncrementStepChange();
   };
 
   const handleSubmitPlain = () => {
-    let plain = dataContext.selectPlain;
-    let duration = dataContext.selectPlainDuration;
+    let plain = selectPlain;
+    let duration = selectPlainDuration;
     if (plain.length === 0 || duration.length === 0) {
       setPlainErrorFlag(true);
     } else {
@@ -102,26 +114,26 @@ const StepTwo = () => {
   };
 
   useEffect(() => {
-    switch (dataContext.selectPlain) {
+    switch (selectPlain) {
       case "Arcade":
-        dataContext.setSelectedPlainPrice(
-          dataContext.selectPlainDuration === "monthly"
+        setSelectedPlainPrice(
+          selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.archad_plan
             : YEARLY_PRICE.archad_plan
         );
         break;
 
       case "Advance":
-        dataContext.setSelectedPlainPrice(
-          dataContext.selectPlainDuration === "monthly"
+        setSelectedPlainPrice(
+          selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.advance_plan
             : YEARLY_PRICE.advance_plan
         );
         break;
 
       case "Pro":
-        dataContext.setSelectedPlainPrice(
-          dataContext.selectPlainDuration === "monthly"
+        setSelectedPlainPrice(
+          selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.pro_plan
             : YEARLY_PRICE.pro_plan
         );
@@ -130,8 +142,53 @@ const StepTwo = () => {
       default:
         break;
     }
-  }, [dataContext.selectPlainDuration]);
-  
+  }, [selectPlain, selectPlainDuration]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setSelectPlainDuration(dataContext.selectPlainPriceRef.current);
+    if (dataContext.selectPlainRef.current !== "") {
+      switch (dataContext.selectPlainRef.current) {
+        case "Arcade":
+          setSelectPlainUI(0);
+          setSelectPlain("Arcade");
+          setSelectedPlainPrice(
+            dataContext.selectPlainPriceRef.current === "monthly"
+              ? MONTHLY_PRICE.archad_plan
+              : YEARLY_PRICE.archad_plan
+          );
+          break;
+
+        case "Advance":
+          setSelectPlainUI(1);
+          setSelectPlain("Advance");
+          setSelectedPlainPrice(
+            dataContext.selectPlainPriceRef.current === "monthly"
+              ? MONTHLY_PRICE.advance_plan
+              : YEARLY_PRICE.advance_plan
+          );
+          break;
+
+        case "Pro":
+          setSelectPlainUI(2);
+          setSelectPlain("Pro");
+          setSelectedPlainPrice(
+            dataContext.selectPlainPriceRef.current === "monthly"
+              ? MONTHLY_PRICE.pro_plan
+              : YEARLY_PRICE.pro_plan
+          );
+          break;
+
+        default:
+          setSelectPlainUI(0);
+          setSelectPlain("Arcade");
+          break;
+      }
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <div className="select-plan-block" id="select-plan-id">
@@ -145,7 +202,7 @@ const StepTwo = () => {
               <div className="selection-block-container">
                 <div
                   className={
-                    dataContext.selectPlainUI === 0
+                    selectPlainUI === 0
                       ? "selection-block active-select-block"
                       : "selection-block"
                   }
@@ -166,13 +223,13 @@ const StepTwo = () => {
                         id="price-1"
                         className="selection-details-price-span"
                       >
-                        {dataContext.selectPlainDuration === "monthly"
+                        {selectPlainDuration === "monthly"
                           ? formatString("month", MONTHLY_PRICE.archad_plan)
                           : formatString("year", YEARLY_PRICE.archad_plan)}
                       </span>
                       <br />
                       <span className="selection-details-span">
-                        {dataContext.selectPlainDuration === "yearly" && "2 months free"}
+                        {selectPlainDuration === "yearly" && "2 months free"}
                       </span>
                     </div>
                   </div>
@@ -180,7 +237,7 @@ const StepTwo = () => {
                 <div
                   // className="selection-block"
                   className={
-                    dataContext.selectPlainUI === 1
+                    selectPlainUI === 1
                       ? "selection-block active-select-block"
                       : "selection-block"
                   }
@@ -201,13 +258,13 @@ const StepTwo = () => {
                         id="price-2"
                         className="selection-details-price-span"
                       >
-                        {dataContext.selectPlainDuration === "monthly"
+                        {selectPlainDuration === "monthly"
                           ? formatString("month", MONTHLY_PRICE.advance_plan)
                           : formatString("year", YEARLY_PRICE.advance_plan)}
                       </span>
                       <br />
                       <span className="selection-details-span">
-                        {dataContext.selectPlainDuration === "yearly" && "2 months free"}
+                        {selectPlainDuration === "yearly" && "2 months free"}
                       </span>
                     </div>
                   </div>
@@ -215,7 +272,7 @@ const StepTwo = () => {
                 <div
                   // className="selection-block"
                   className={
-                    dataContext.selectPlainUI === 2
+                    selectPlainUI === 2
                       ? "selection-block active-select-block"
                       : "selection-block"
                   }
@@ -236,13 +293,13 @@ const StepTwo = () => {
                         id="price-3"
                         className="selection-details-price-span"
                       >
-                        {dataContext.selectPlainDuration === "monthly"
+                        {selectPlainDuration === "monthly"
                           ? formatString("month", MONTHLY_PRICE.pro_plan)
                           : formatString("year", YEARLY_PRICE.pro_plan)}
                       </span>
                       <br />
                       <span className="selection-details-span">
-                        {dataContext.selectPlainDuration === "yearly" && "2 months free"}
+                        {selectPlainDuration === "yearly" && "2 months free"}
                       </span>
                     </div>
                   </div>
@@ -262,7 +319,7 @@ const StepTwo = () => {
                       className="period-check"
                       id="period-check-id"
                       onChange={handleChangePlainDuration}
-                      checked={dataContext.selectPlainDuration === "yearly"}
+                      checked={selectPlainDuration === "yearly" || dataContext.selectPlainPriceRef.current === "yearly"}
                     />
                     <span className="slider round"></span>
                   </label>
@@ -275,7 +332,9 @@ const StepTwo = () => {
         <div className="button-block">
           <div className="next-button-block">
             <div className="go-back-block">
-              <span onClick={dataContext.handleDecrementStepChange}>Go Back</span>
+              <span onClick={dataContext.handleDecrementStepChange}>
+                Go Back
+              </span>
             </div>
             <button className="next-button" onClick={handleSubmitPlain}>
               Next Step
