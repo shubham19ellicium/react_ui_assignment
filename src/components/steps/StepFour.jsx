@@ -2,9 +2,12 @@ import React, { useContext } from "react";
 import { formatString } from "../../commonUtil/CommonUtil";
 import { DataContext } from "../../context/stateData";
 import DisplaySummary from "../summaryDisplay/DisplaySummary";
+import { SelectPlainContext } from "../../context/selectPlainContext";
 
 const StepFour = () => {
   const dataContext = useContext(DataContext);
+  const selectPlanContext = useContext(SelectPlainContext);
+  console.log("IN CONTEXT :: ",selectPlanContext);
 
   let MONTHLY_PRICE = {
     archad_plan: 9,
@@ -28,16 +31,17 @@ const StepFour = () => {
   };
   const handleUpdatePackageName = () => {
     console.log("handleUpdatePackageName ");
+    console.log("selectPlanContext.selectPlain ---> ",selectPlanContext.selectPlanObject.selectPlain);
     // let nameString = `${selectPlain} (${selectPlainDuration.capitalizeFirstLetter()})`;
-    let nameString = `${dataContext.selectPlain} (${capitalizeFirstLetter(
-      dataContext.selectPlainDuration
+    let nameString = `${selectPlanContext.selectPlanObject.selectPlain} (${capitalizeFirstLetter(
+      selectPlanContext.selectPlanObject.selectPlainDuration
     )})`;
     return nameString;
   };
   const handlePriceDisplay = () => {
     console.log("handlePriceDisplay");
-    let price = dataContext.selectedPlainPrice;
-    let period = dataContext.selectPlainDuration;
+    let price = selectPlanContext.selectPlanObject.selectedPlainPrice;
+    let period = selectPlanContext.selectPlanObject.selectPlainDuration;
     let formatPeriod;
     if (period === "monthly") {
       formatPeriod = "month";
@@ -60,10 +64,10 @@ const StepFour = () => {
       0
     );
 
-    let totalSum = addOnSum + dataContext.selectedPlainPrice;
+    let totalSum = addOnSum + selectPlanContext.selectPlanObject.selectedPlainPrice;
 
     let returnSum =
-      dataContext.selectPlainDuration === "monthly"
+      selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
         ? formatString("month", totalSum)
         : formatString("year", totalSum);
 
@@ -78,12 +82,12 @@ const StepFour = () => {
         mo: 1,
         yr: 10,
         plainDuration:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? formatString("month", MONTHLY_PRICE.online_service)
             : formatString("year", YEARLY_PRICE.online_service),
         key: "Online Service",
         money:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.online_service
             : YEARLY_PRICE.online_service,
       },
@@ -93,12 +97,12 @@ const StepFour = () => {
         mo: 2,
         yr: 20,
         plainDuration:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? formatString("month", MONTHLY_PRICE.large_service)
             : formatString("year", YEARLY_PRICE.large_service),
         key: "Large Service",
         money:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.large_service
             : YEARLY_PRICE.large_service,
       },
@@ -108,18 +112,18 @@ const StepFour = () => {
         mo: 2,
         yr: 20,
         plainDuration:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? formatString("month", MONTHLY_PRICE.custom_service)
             : formatString("year", YEARLY_PRICE.custom_service),
         key: "Custom Service",
         money:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.custom_service
             : YEARLY_PRICE.custom_service,
       },
     },
   };
- 
+
   return (
     <>
       <div className="finish-up-block" id="finish-up-id">
@@ -151,16 +155,35 @@ const StepFour = () => {
                   <hr />
                 </div>
                 <div className="finish-add-on-wrapper" id="add-on-wrapper-id">
-                  {/* {addOnSelectedItem.map((data, index) => { */}
                   {Object.keys(services.addons).map((addon, idx) => {
-                    if (dataContext.formData[addon] === true) {
-                      return (
+                    // if (dataContext.formData[addon] === true) {
+                    //   return (
+                    //     <DisplaySummary
+                    //       key={idx}
+                    //       obj={{
+                    //         title: services.addons[addon].title,
+                    //         price:
+                    //           selectPlanContext.selectPlainDuration === "monthly"
+                    //             ? formatString(
+                    //                 "month",
+                    //                 services.addons[addon].money
+                    //               )
+                    //             : formatString(
+                    //                 "year",
+                    //                 services.addons[addon].money
+                    //               ),
+                    //       }}
+                    //     />
+                    //   );
+                    // }
+                    return (
+                      dataContext.formData[addon] === true && (
                         <DisplaySummary
                           key={idx}
                           obj={{
                             title: services.addons[addon].title,
                             price:
-                              dataContext.selectPlainDuration === "monthly"
+                              selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
                                 ? formatString(
                                     "month",
                                     services.addons[addon].money
@@ -171,8 +194,8 @@ const StepFour = () => {
                                   ),
                           }}
                         />
-                      );
-                    }
+                      )
+                    );
                   })}
                 </div>
               </div>

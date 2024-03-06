@@ -46,59 +46,6 @@ export default function DataProvider({ children }) {
         setStepNumber((prev) => prev - 1);
     };
 
-    // useEffect(() => {
-    //     console.log("TARGET :: ",stepNumber);
-    //     switch (stepNumber) {
-    //         case 1:
-    //             circleFlagRef.current = {
-    //                 circl1: true,
-    //                 circl2: false,
-    //                 circl3: false,
-    //                 circl4: false,
-    //             };
-    //             console.log("---------------------------1 :: ",circleFlagRef.current);
-    //             break;
-
-    //         case 2:
-    //             circleFlagRef.current = {
-    //                 circl1: false,
-    //                 circl2: true,
-    //                 circl3: false,
-    //                 circl4: false,
-    //             };
-    //             console.log("---------------------------2 :: ",circleFlagRef.current);
-    //             break;
-
-    //         case 3:
-    //             circleFlagRef.current = {
-    //                 circl1: false,
-    //                 circl2: false,
-    //                 circl3: true,
-    //                 circl4: false,
-    //             };
-    //             console.log("---------------------------3 :: ",circleFlagRef.current);
-    //             break;
-
-    //         case 4:
-    //             circleFlagRef.current = {
-    //                 circl1: false,
-    //                 circl2: false,
-    //                 circl3: false,
-    //                 circl4: true,
-    //             };
-    //             console.log("---------------------------4 :: ",circleFlagRef.current);
-    //             break;
-
-    //         default:
-    //             break;
-    //     }
-
-    // }, [stepNumber]);
-
-    const [selectPlain, setSelectPlain] = useState("");
-    const [selectPlainDuration, setSelectPlainDuration] = useState("monthly");
-    const [selectPlainUI, setSelectPlainUI] = useState(null);
-    const [selectedPlainPrice, setSelectedPlainPrice] = useState({});
 
     const [formData, setFormData] = useState({
         onlineServices: false,
@@ -124,14 +71,6 @@ export default function DataProvider({ children }) {
         handleIncrementStepChange: handleIncrementStepChange,
         handleDecrementStepChange: handleDecrementStepChange,
 
-        selectPlain: selectPlain,
-        selectPlainDuration: selectPlainDuration,
-        selectPlainUI: selectPlainUI,
-        selectedPlainPrice: selectedPlainPrice,
-        setSelectPlain: setSelectPlain,
-        setSelectPlainDuration: setSelectPlainDuration,
-        setSelectPlainUI: setSelectPlainUI,
-        setSelectedPlainPrice: setSelectedPlainPrice,
 
         formData: formData,
         setFormData: setFormData,

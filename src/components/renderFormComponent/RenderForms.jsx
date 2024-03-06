@@ -6,6 +6,7 @@ import StepTwo from "../steps/StepTwo";
 import StepThree from "../steps/StepThree";
 import StepFour from "../steps/StepFour";
 import StepFive from "../steps/StepFive";
+import SelectPlainProvider from "../../context/selectPlainContext";
 
 const RenderForms = (props) => {
   const dataContext = useContext(DataContext);
@@ -14,13 +15,25 @@ const RenderForms = (props) => {
       return <StepOne />;
 
     case 2:
-      return <StepTwo />;
+      return (
+        <SelectPlainProvider>
+          <StepTwo />
+        </SelectPlainProvider>
+      );
 
     case 3:
-      return <StepThree />;
+      return (
+        <SelectPlainProvider>
+          <StepThree />
+        </SelectPlainProvider>
+      );
 
     case 4:
-      return <StepFour />;
+      return (
+        <SelectPlainProvider>
+          <StepFour />
+        </SelectPlainProvider>
+      );
 
     case 5:
       return <StepFive />;

@@ -2,13 +2,17 @@ import React, { useContext, useState } from "react";
 import { DataContext } from "../../context/stateData";
 import { formatString } from "../../commonUtil/CommonUtil";
 import AddOn from "../addOnsBlock/AddOn";
+import { SelectPlainContext } from "../../context/selectPlainContext";
 
 const StepThree = () => {
-//   const [formData, setFormData] = useState({
-//     onlineServices: false,
-//     largerStorage: false,
-//     customizableProfile: false,
-//   });
+  //   const [formData, setFormData] = useState({
+  //     onlineServices: false,
+  //     largerStorage: false,
+  //     customizableProfile: false,
+  //   });
+
+  const selectPlanContext = useContext(SelectPlainContext);
+  const dataContext = useContext(DataContext);
 
   let MONTHLY_PRICE = {
     archad_plan: 9,
@@ -27,8 +31,6 @@ const StepThree = () => {
     custom_service: 20,
   };
 
-  const dataContext = useContext(DataContext);
-
   const services = {
     addons: {
       onlineServices: {
@@ -37,12 +39,12 @@ const StepThree = () => {
         mo: 1,
         yr: 10,
         plainDuration:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? formatString("month", MONTHLY_PRICE.online_service)
             : formatString("year", YEARLY_PRICE.online_service),
         key: "Online Service",
         money:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.online_service
             : YEARLY_PRICE.online_service,
       },
@@ -52,12 +54,12 @@ const StepThree = () => {
         mo: 2,
         yr: 20,
         plainDuration:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? formatString("month", MONTHLY_PRICE.large_service)
             : formatString("year", YEARLY_PRICE.large_service),
         key: "Large Service",
         money:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.large_service
             : YEARLY_PRICE.large_service,
       },
@@ -67,12 +69,12 @@ const StepThree = () => {
         mo: 2,
         yr: 20,
         plainDuration:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? formatString("month", MONTHLY_PRICE.custom_service)
             : formatString("year", YEARLY_PRICE.custom_service),
         key: "Custom Service",
         money:
-          dataContext.selectPlainDuration === "monthly"
+          selectPlanContext.selectPlanObject.selectPlainDuration === "monthly"
             ? MONTHLY_PRICE.custom_service
             : YEARLY_PRICE.custom_service,
       },
@@ -103,7 +105,9 @@ const StepThree = () => {
                       key={addon + idx}
                       title={services.addons[addon].title}
                       subtitle={services.addons[addon].subtitle}
-                      rate={services.addons[addon][dataContext.formData.billing]}
+                      rate={
+                        services.addons[addon][dataContext.formData.billing]
+                      }
                       active={dataContext.formData[addon]}
                       type={addon}
                       handlePlanClick={handlePlanClick}
@@ -133,7 +137,9 @@ const StepThree = () => {
         <div className="button-block">
           <div className="next-button-block">
             <div className="go-back-block">
-              <span onClick={dataContext.handleDecrementStepChange}>Go Back</span>
+              <span onClick={dataContext.handleDecrementStepChange}>
+                Go Back
+              </span>
             </div>
             <button
               className="next-button"
